@@ -41,7 +41,7 @@ Test image 4 twisted stairways inside a building. This picture put the sobel mac
 ## Authors
 
 * **David Lor** - *Initial work*
-* **Kaiwen Zheng** - *Initial work* - [PurpleBooth](https://github.com/kaiwen2times)
+* **Kaiwen Zheng** - *Initial work* - [kaiwen2times](https://github.com/kaiwen2times)
 
 ## License
 
