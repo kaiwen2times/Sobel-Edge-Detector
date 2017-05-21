@@ -1,0 +1,9 @@
+set exclude_gates {PadInC PadOut}
+load_library /tools/mentor/adk/technology/leonardo/tsmc018_typ.syn
+read {memory.vhd derivative.vhd max_derivative_tweaked.vhd threshold.vhd state_machine.vhd sobel_struct.vhd}
+set sdf_write_flat_netlist TRUE
+ungroup -all -hier
+optimize
+write sobel_struct_s.v
+write sobel_struct_s.vhdl
+write sobel_struct_s.sdf

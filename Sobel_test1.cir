@@ -1,0 +1,82 @@
+* Circuit file for simulation
+*** Includes – Model file + your spice file(s)
+
+.INCLUDE "$ADK/technology/ic/models/tsmc018.mod"
+.INCLUDE "$ENTER_DIR_HERE/sobelLayout.pex.netlist"
+
+*** Options
+.OPTION NOASCII
+.OPTION MODWL
+.OPTION ENGNOT
+.OPTION AEX
+.OPTION LIMPROBE=10000
+.OPTION DOTNODE
+
+*** Instantiation of your circuit (top level from spice file)
+X_PARASITIC O_VALID O_DIR[1] O_MODE[1] O_MODE[0] I_CLOCK O_DIR[0]
++ I_VALID O_EDGE I_PIXEL[0] I_RESET I_PIXEL[1] I_PIXEL[2] I_PIXEL[3] I_PIXEL[5]
++ I_PIXEL[7] I_PIXEL[6] O_DIR[2] I_PIXEL[4] VDD GND SOBELLAYOUT
+
+*** Forces
+VFORCE_VDD VDD 0 dc 1.62
+VFORCE_I_CLOCK I_CLOCK 0 pulse(0 1.62 0n 0.1n 0.1n 10n 20n)
+
+*** Create busses
+.SETBUS I_PIXEL I_PIXEL[7] I_PIXEL[6] I_PIXEL[5] I_PIXEL[4] I_PIXEL[3] I_PIXEL[2] I_PIXEL[1] I_PIXEL[0]
+.SETBUS O_DIR O_DIR[2] O_DIR[1] O_DIR[0]
+.SETBUS O_MODE O_MODE[1] O_MODE[0]
+.SETBUS RESET_PIX I_RESET I_PIXEL
+
+*** Set bus values
+.SIGBUS I_PIXEL VHI = 1.62 VLO = 0 TRISE=0.1n TFALL=0.1n BASE=HEXA 
++ 20n 0 40n FF 60n FF 80n 0 100n 0 120n FF 140n 0 160n 0 180n 0 
+
+.SIGBUS RESET_PIX VHI = 1.62 VLO = 0 TRISE=0.1n TFALL=0.1n BASE=HEXA 
++ 0n 2
++ 20n 1
++ 30n 0
++ 40n 1
++ 50n 0
++ 60n 1
++ 70n 0
++ 80n 1
++ 90n 0
++ 100n 1
++ 110n 0
++ 120n 1
++ 130n 0
++ 140n 1
++ 150n 0
++ 160n 1
++ 170n 0
++ 180n 1
++ 190n 0
+
+*** Adding a load capacitor
+C_LOAD O_VALID 0 120f
+C_LOAD1 O_MODE[1] 0 120f
+C_LOAD2 0_MODE[0] 0 120f
+C_LOAD3 0_DIR[2] 0 120f
+C_LOAD4 0_DIR[1] 0 120f
+C_LOAD5 0_DIR[0] 0 120f
+
+*** Connect GND and 0V
+.CONNECT GND 0
+
+*** Specifying the simulation parameters for a transient analysis
+.TRAN 0.1 1us 0
+
+*** Setting the temperature
+.TEMP 125
+
+*** Plotting some voltages
+.PLOT TRAN V(I_CLOCK) V(O_EDGE) V(O_VALID) 
+
+*** Plotting busses
+.PLOTBUS I_PIXEL
+.PLOTBUS O_DIR
+.PLOTBUS O_MODE
+.PLOTBUS RESET_PIX
+
+.measure tran static_sample AVG power from=221ns to=227ns
+.measure tran dynamic MAX power from=0ns to=600ns
