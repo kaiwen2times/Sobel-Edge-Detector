@@ -1,6 +1,4 @@
-# Project Title
-
-VHDL Sobel Edge Detector
+# VHDL Sobel Edge Detector
 
 ## Description
 
